@@ -1,36 +1,224 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LIKAS Website
+
+LIKAS is a single-page landing website for an AI-powered disaster companion mobile application. The site presents LIKAS as a public-service, government-tech, and disaster-response platform for Filipino communities.
+
+The landing page highlights preparedness guidance, smart evacuation routing, offline AI chat or voice assistance, Gemma 4-powered intelligence, app mockups, team members, a YouTube demo section, and an APK download button.
+
+## Tech Stack
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
+- lucide-react
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+If you want to run it on a specific host and port:
 
-## Learn More
+```bash
+npm run dev -- --hostname 127.0.0.1 --port 3001
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Available Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```text
+likas-web/
+  public/
+    downloads/
+      README.md
+      likas.apk
+    mockups/
+      README.md
+      hero_route.png
+      hero_assistant.png
+      mockup_1.jpg
+      mockup_2.jpg
+      mockup_3.jpg
+      mockup_5.jpg
+      mockup_6.jpg
+    team/
+      README.md
+      john-paul-curada.jpg
+      gerald-berongoy.jpg
+      kyne-laggui.jpg
+      henry-james-carlos.jpg
+  src/
+    app/
+      globals.css
+      layout.tsx
+      page.tsx
+    components/
+      ui/
+    lib/
+      utils.ts
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Main Page
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The landing page is implemented in:
+
+```text
+src/app/page.tsx
+```
+
+Global styling, background patterns, nature details, grids, and custom utility classes are in:
+
+```text
+src/app/globals.css
+```
+
+## Customizing Content
+
+Most page content is controlled by arrays near the top of `src/app/page.tsx`:
+
+- `features`
+- `techStack`
+- `mockups`
+- `steps`
+- `team`
+- `navItems`
+
+Update these arrays to edit titles, descriptions, roles, image paths, and section content.
+
+## YouTube Demo
+
+The demo section is YouTube-ready.
+
+In `src/app/page.tsx`, set:
+
+```tsx
+const youtubeEmbedUrl = "https://www.youtube-nocookie.com/embed/VIDEO_ID";
+```
+
+Replace `VIDEO_ID` with the ID from your YouTube video.
+
+## APK Download
+
+The Demo section includes a `Download APK` button.
+
+Place the Android APK here:
+
+```text
+public/downloads/likas.apk
+```
+
+The button downloads from:
+
+```text
+/downloads/likas.apk
+```
+
+## App Mockup Images
+
+Hero phone images:
+
+```text
+public/mockups/hero_route.png
+public/mockups/hero_assistant.png
+```
+
+App showcase mockups:
+
+```text
+public/mockups/mockup_1.jpg
+public/mockups/mockup_2.jpg
+public/mockups/mockup_3.jpg
+public/mockups/mockup_5.jpg
+public/mockups/mockup_6.jpg
+```
+
+Recommended screenshot format:
+
+- Portrait mobile screenshots
+- 9:19 or similar phone ratio
+- At least 900px tall for cleaner rendering
+
+## Team Photos
+
+Place team photos in:
+
+```text
+public/team/
+```
+
+Expected filenames:
+
+```text
+john-paul-curada.jpg
+gerald-berongoy.jpg
+kyne-laggui.jpg
+henry-james-carlos.jpg
+```
+
+Recommended photo format:
+
+- Portrait
+- 4:5 ratio
+- At least 800x1000 px
+
+## Design Notes
+
+The website uses a light public-service visual direction inspired by modern government-tech and disaster-response interfaces. It includes:
+
+- Soft green gradients
+- Nature-inspired accents
+- Topographic and grid background details
+- Glass-like cards
+- Responsive phone mockups
+- Sticky desktop navigation
+- Bottom mobile navigation
+- Smooth Framer Motion reveal animations
+
+## Production Build
+
+Run:
+
+```bash
+npm run build
+```
+
+Then start the production server:
+
+```bash
+npm run start
+```
+
+## Deployment
+
+This project can be deployed to any platform that supports Next.js, such as Vercel, Netlify, or a Node.js server.
+
+For Vercel, connect the repository and use the default Next.js build settings:
+
+```text
+Build command: npm run build
+Output: .next
+```
