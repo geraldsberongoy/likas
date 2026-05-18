@@ -598,7 +598,7 @@ export default function Home() {
                     "min-h-13 w-full rounded-full bg-[#3bb372] px-5 text-center text-base text-white shadow-xl shadow-emerald-500/25 hover:bg-emerald-700 sm:w-auto sm:px-7",
                 })}
               >
-                Explore LIKAS <ArrowRight className="ml-2 size-4" />
+                Explore LIKAS
               </a>
               <a
                 href="#video"
@@ -612,23 +612,6 @@ export default function Home() {
                 <Play className="mr-2 size-4 fill-emerald-600 text-emerald-600" />
                 Watch Demo
               </a>
-            </div>
-            <div className="mt-10 grid max-w-xl grid-cols-1 gap-3 min-[430px]:grid-cols-3">
-              {[
-                ["2.58GB", "edge model target"],
-                ["0 data", "offline runtime"],
-                ["PH", "hazard-ready"],
-              ].map(([value, label]) => (
-                <div
-                  key={value}
-                  className="rounded-3xl border border-white bg-white/72 p-4 shadow-sm backdrop-blur"
-                >
-                  <p className="text-xl font-black text-slate-950">{value}</p>
-                  <p className="mt-1 text-xs font-medium uppercase tracking-[0.16em] text-slate-500">
-                    {label}
-                  </p>
-                </div>
-              ))}
             </div>
           </Reveal>
 
