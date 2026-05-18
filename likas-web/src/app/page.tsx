@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   BatteryWarning,
@@ -51,7 +52,7 @@ const stagger = {
   },
 };
 
-const features = [
+const functionalities = [
   {
     title: "Preparedness before calamities",
     copy: "LIKAS turns onboarding answers into household-ready checklists, safety reminders, and disaster-specific preparation plans for families, students, workers, and vulnerable community members.",
@@ -205,6 +206,8 @@ const navItems = [
   { href: "#team", label: "Team", icon: Users },
 ];
 
+const sectionOrder = ["top", "video", "features", "ai", "mockups", "team"];
+
 function Reveal({
   children,
   className = "",
@@ -295,7 +298,13 @@ function GlobalBackdrop() {
   );
 }
 
-function DesktopNav() {
+function DesktopNav({
+  activeSection,
+  onNavigate,
+}: {
+  activeSection: string;
+  onNavigate: (section: string) => void;
+}) {
   return (
     <nav className="fixed left-1/2 top-5 z-40 hidden w-[min(1180px,calc(100%-48px))] -translate-x-1/2 items-center justify-between rounded-full border border-white/70 bg-white/72 px-4 py-3 shadow-lg shadow-emerald-950/5 backdrop-blur-xl md:flex">
       <a href="#top" className="flex items-center gap-3">
@@ -316,7 +325,12 @@ function DesktopNav() {
           <a
             key={item.href}
             href={item.href}
-            className="hover:text-emerald-700"
+            onClick={() => onNavigate(item.href.slice(1))}
+            className={`rounded-full px-3 py-1.5 transition ${
+              activeSection === item.href.slice(1)
+                ? "bg-emerald-50 text-emerald-700 shadow-sm"
+                : "hover:text-emerald-700"
+            }`}
           >
             {item.label}
           </a>
@@ -335,12 +349,23 @@ function DesktopNav() {
   );
 }
 
-function MobileBottomNav() {
+function MobileBottomNav({
+  activeSection,
+  onNavigate,
+}: {
+  activeSection: string;
+  onNavigate: (section: string) => void;
+}) {
   return (
     <nav className="fixed bottom-3 left-1/2 z-50 flex w-[min(430px,calc(100%-24px))] -translate-x-1/2 items-center justify-between rounded-[1.6rem] border border-white/75 bg-white/84 p-2 shadow-2xl shadow-emerald-950/14 backdrop-blur-xl md:hidden">
       <a
         href="#top"
-        className="grid min-w-12 place-items-center gap-1 rounded-2xl px-2 py-2 text-[10px] font-bold text-emerald-700"
+        onClick={() => onNavigate("top")}
+        className={`grid min-w-12 place-items-center gap-1 rounded-2xl px-2 py-2 text-[10px] font-bold transition ${
+          activeSection === "top"
+            ? "bg-emerald-100 text-emerald-700 shadow-sm"
+            : "text-slate-500 hover:bg-emerald-50 hover:text-emerald-700"
+        }`}
       >
         <Waves className="size-5" />
         Home
@@ -349,7 +374,12 @@ function MobileBottomNav() {
         <a
           key={item.href}
           href={item.href}
-          className="grid min-w-12 place-items-center gap-1 rounded-2xl px-2 py-2 text-[10px] font-semibold text-slate-500 transition hover:bg-emerald-50 hover:text-emerald-700"
+          onClick={() => onNavigate(item.href.slice(1))}
+          className={`grid min-w-12 place-items-center gap-1 rounded-2xl px-2 py-2 text-[10px] font-semibold transition ${
+            activeSection === item.href.slice(1)
+              ? "bg-emerald-100 text-emerald-700 shadow-sm"
+              : "text-slate-500 hover:bg-emerald-50 hover:text-emerald-700"
+          }`}
         >
           <item.icon className="size-5" />
           {item.label}
@@ -471,9 +501,56 @@ function PhoneMockup({
 }
 
 export default function Home() {
+  const [activeSection, setActiveSection] = useState("top");
   const { scrollYProgress } = useScroll();
   const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const heroY = useTransform(scrollYProgress, [0, 0.35], [0, 74]);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateActiveSection = () => {
+      const navOffset = 140;
+      const scrollPosition = window.scrollY + navOffset;
+
+      let current = "top";
+
+      for (const id of sectionOrder) {
+        const section = document.getElementById(id);
+        if (!section) continue;
+
+        if (scrollPosition >= section.offsetTop) {
+          current = id;
+        }
+      }
+
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 8;
+
+      if (nearBottom) {
+        current = sectionOrder[sectionOrder.length - 1];
+      }
+
+      setActiveSection(current);
+    };
+
+    const onScroll = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(updateActiveSection);
+    };
+
+    updateActiveSection();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#f5fbf4] pb-24 text-slate-950 md:pb-0">
@@ -482,16 +559,19 @@ export default function Home() {
         className="fixed left-0 top-0 z-50 h-1 bg-gradient-to-r from-[#3bb372] via-[#74e7b8] to-[#3bb372]"
         style={{ width: progressWidth }}
       />
-      <DesktopNav />
-      <MobileBottomNav />
+      <DesktopNav activeSection={activeSection} onNavigate={setActiveSection} />
+      <MobileBottomNav
+        activeSection={activeSection}
+        onNavigate={setActiveSection}
+      />
 
-      <section className="relative min-h-screen px-5 pb-20 pt-7 sm:px-8 md:pt-28 lg:px-12">
+      <section
+        id="top"
+        className="relative min-h-screen scroll-mt-28 px-5 pb-20 pt-7 sm:px-8 md:pt-28 lg:px-12"
+      >
         <NatureBackdrop />
 
-        <div
-          id="top"
-          className="mx-auto grid max-w-7xl items-center gap-14 pt-12 lg:grid-cols-[0.96fr_1.04fr] lg:pt-12"
-        >
+        <div className="mx-auto grid max-w-7xl items-center gap-14 pt-12 lg:grid-cols-[0.96fr_1.04fr] lg:pt-12">
           <Reveal>
             <Badge className="mb-5 border-emerald-200 bg-white/75 px-4 py-1.5 text-emerald-700 shadow-sm">
               Mobile app for offline-first disaster response
@@ -557,7 +637,7 @@ export default function Home() {
       </section>
 
       <section
-        className="section-atmosphere relative px-5 py-24 sm:px-8"
+        className="section-atmosphere relative scroll-mt-28 px-5 py-24 sm:px-8"
         id="video"
       >
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
@@ -666,7 +746,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-atmosphere px-5 py-24 sm:px-8" id="features">
+      <section
+        className="section-atmosphere scroll-mt-28 px-5 py-24 sm:px-8"
+        id="features"
+      >
         <SectionHeader
           eyebrow="Key features"
           title="Practical disaster support across every phase of response."
@@ -679,7 +762,7 @@ export default function Home() {
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}
         >
-          {features.map(({ title, copy, icon: Icon, stat, outcome }) => (
+          {functionalities.map(({ title, copy, icon: Icon, stat, outcome }) => (
             <motion.div variants={fadeUp} key={title}>
               <Card className="feature-card h-full overflow-hidden border-emerald-100/80 bg-white/86 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-950/10">
                 <CardContent className="relative p-6">
@@ -709,7 +792,7 @@ export default function Home() {
       </section>
 
       <section
-        className="section-atmosphere relative px-5 py-24 sm:px-8"
+        className="section-atmosphere relative scroll-mt-28 px-5 py-24 sm:px-8"
         id="ai"
       >
         <div className="absolute inset-x-0 top-1/2 -z-10 h-[520px] -translate-y-1/2 bg-[radial-gradient(circle_at_50%_50%,rgba(116,231,184,0.42),transparent_58%)]" />
@@ -794,7 +877,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-atmosphere px-5 py-24 sm:px-8" id="mockups">
+      <section
+        className="section-atmosphere scroll-mt-28 px-5 py-24 sm:px-8"
+        id="mockups"
+      >
         <SectionHeader
           eyebrow="Mobile app mockups"
           title="A closer look at the LIKAS mobile experience."
@@ -841,7 +927,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-atmosphere px-5 py-24 sm:px-8" id="team">
+      <section
+        className="section-atmosphere scroll-mt-28 px-5 py-24 sm:px-8"
+        id="team"
+      >
         <SectionHeader
           eyebrow="Meet the team"
           title="The builders behind LIKAS."
@@ -900,16 +989,20 @@ export default function Home() {
                   </div>
                 </div>
                 <Separator className="my-6 bg-white/10" />
-                <a
-                  href="#top"
-                  className={buttonVariants({
-                    size: "lg",
-                    className:
-                      "min-h-11 w-full rounded-full bg-white px-4 text-center text-slate-950 hover:bg-emerald-100",
-                  })}
-                >
-                  Get Started with LIKAS <Zap className="ml-2 size-4" />
-                </a>
+                <Reveal delay={0.08} className="lg:col-start-1">
+                  <a
+                    href="/downloads/likas.apk"
+                    download
+                    className={buttonVariants({
+                      size: "lg",
+                      className:
+                        "min-h-13 w-full rounded-full bg-[#74e7b8] px-5 text-center text-base text-white shadow-xl shadow-emerald-500/25 hover:bg-emerald-700 sm:full",
+                    })}
+                  >
+                    <Download className="mr-2 size-4" />
+                    Download APK
+                  </a>
+                </Reveal>
               </div>
             </div>
           </div>
