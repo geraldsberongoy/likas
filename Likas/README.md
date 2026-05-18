@@ -1,4 +1,8 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# LIKAS — React Native App
+
+This is the [**React Native**](https://reactnative.dev) app for **LIKAS**, the offline-first, AI-powered disaster companion. See the [root README](../README.md) for the project overview and [`docs/kaggle-writeup.md`](../docs/kaggle-writeup.md) for the full technical story.
+
+The on-device AI dispatch loop, GBNF grammar, tool registry, and offline evacuation/routing logic live in [`src/services/`](src/services/). The Gemma 4 Q4_K_M GGUF model is **not committed** — it is downloaded in-app from the Setup screen.
 
 # Getting Started
 
@@ -82,17 +86,19 @@ You've successfully run and modified your React Native App. :partying_face:
 - If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
 - If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
 
-### Assets (Maps & Fonts)
+### Assets (Maps, Protocols, OSM data & Fonts)
 
-This project uses shared assets located in `Likas/assets/`. These are automatically linked to both Android and iOS projects. 
+This project bundles its offline data in [`assets/`](assets/): disaster protocols (`assets/protocols/`), scraped OSM POIs (`assets/data/scraped/`), Metro Manila + fault-line data (`assets/data/`), and the map style + pre-computed pedestrian graph (`assets/maps/`). These are linked into both the Android and iOS native projects.
 
-If you add new fonts or map files (`.mbtiles`), you must run the following command to link them natively:
+After cloning, or whenever you add fonts or map data, link the assets natively:
 
 ```sh
-npx react-native-asset
+npm run prepare-assets   # downloads glyphs, links Android, runs react-native-asset
+# or, to only re-link without re-fetching fonts:
+npm run link-assets
 ```
 
-Note: The generated native assets in `android/app/src/main/assets/` are ignored by Git to prevent repository bloat. Only the source files in `Likas/assets/` should be tracked.
+Note: The generated native assets in `android/app/src/main/assets/` are gitignored to prevent repository bloat. Only the source files in `Likas/assets/` are tracked. The Gemma 4 GGUF model is also not committed — it is fetched in-app.
 
 # Troubleshooting
 
