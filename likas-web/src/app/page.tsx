@@ -12,6 +12,7 @@ import {
   CloudRain,
   Compass,
   Cpu,
+  Download,
   HeartHandshake,
   Layers3,
   Leaf,
@@ -560,12 +561,28 @@ export default function Home() {
         id="video"
       >
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.86fr_1.14fr] lg:items-center">
-          <SectionHeader
-            align="left"
-            eyebrow="Demo showcase"
-            title="See LIKAS as a mobile safety companion in motion."
-            copy="The demo area is designed for a YouTube walkthrough that shows how citizens move from onboarding to preparedness, evacuation routing, and offline AI assistance during an emergency."
-          />
+          <div className="flex flex-col gap-4">
+            <SectionHeader
+              align="left"
+              eyebrow="Demo showcase"
+              title="See LIKAS as a mobile safety companion in motion."
+              copy="The demo area is designed for a YouTube walkthrough that shows how citizens move from onboarding to preparedness, evacuation routing, and offline AI assistance during an emergency."
+            />
+            <Reveal delay={0.08} className="lg:col-start-1">
+              <a
+                href="/downloads/likas.apk"
+                download
+                className={buttonVariants({
+                  size: "lg",
+                  className:
+                    "min-h-13 w-full rounded-full bg-[#3bb372] px-5 text-center text-base text-white shadow-xl shadow-emerald-500/25 hover:bg-emerald-700 sm:full",
+                })}
+              >
+                <Download className="mr-2 size-4" />
+                Download APK
+              </a>
+            </Reveal>
+          </div>
           <Reveal delay={0.1}>
             <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white bg-slate-950 shadow-2xl shadow-emerald-950/15">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(116,231,184,0.42),transparent_32%),linear-gradient(135deg,#10251b,#04120c)]" />
